@@ -3,6 +3,7 @@ let path = require('path')
 let editor = require('editor')
 let { exec } = require('child_process')
 let nconf = require('nconf')
+let chalk = require('chalk')
 
 class Minit {
   constructor() {
@@ -26,12 +27,12 @@ class Minit {
             console.log(`${filepath} skipped.`.substr(2))
           } catch(e) {
             fs.copyFileSync(`${this.template_root}${template}/${file}`, filepath)
-            console.log(`${filepath} copied.`.substr(2))
+            console.log(chalk.green(`${filepath} copied.`.substr(2)))
           }
         }
       } catch(e) {
         if(e.code === 'ENOENT') {
-          console.log(`${template} not found.`)
+          console.log(chalk.red(`${template} not found.`))
         }
       }
       console.log()
