@@ -1,3 +1,4 @@
 {
-  "editor": "atom"
+  "editor": "atom",
+  "template_root": "/Users/ctare/my/init/"
 }

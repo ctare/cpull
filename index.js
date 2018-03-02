@@ -55,7 +55,9 @@ class Minit {
   }
 
   template_list() {
-    let templates = fs.readdirSync(`${this.template_root}`)
+    let templates = fs.readdirSync(`${this.template_root}`).filter((x) => {
+      return fs.statSync(`${this.template_root}${x}`).isDirectory() && x !== '.git'
+    })
     for(let template of templates) {
       console.log(template)
     }
