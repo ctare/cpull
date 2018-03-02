@@ -1,0 +1,3 @@
+# minit
+
+help: minit -h
