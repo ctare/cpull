@@ -1,3 +1,3 @@
-# minit
+# cpull
 
-help: minit -h
+help: cpull -h

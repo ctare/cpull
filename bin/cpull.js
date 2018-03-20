@@ -7,8 +7,8 @@ let root = `${path.dirname(require.main.filename)}/../`
 let template_root = `${root}templates/`
 let editor = 'vi'
 
-let minit = require('../index')
-minit = new minit()
+let cpull = require('../index')
+cpull = new cpull()
 let package_inf = require("../package.json")
 
 argv.type('path', (value) => {
@@ -19,11 +19,11 @@ argv.type('path', (value) => {
   }
 })
 
-argv.info(`Usage: minit [options] [template_name]
+argv.info(`Usage: cpull [options] [template_name]
 Example:
-  . 'minit java'
-  . 'minit java python etc'
-  . 'minit -e node'`)
+  . 'cpull java'
+  . 'cpull java python etc'
+  . 'cpull -e node'`)
 
 argv.version(package_inf.version)
 
@@ -32,31 +32,31 @@ argv.option([{
   short: 'e',
   type: 'string',
   description: 'Edit template file',
-  example: "'minit -e java' if template not exists then create."
+  example: "'cpull -e java' if template not exists then create."
 }, {
   name: 'template',
   short: 't',
   type: 'path',
   description: 'Change template root',
-  example: "'minit -t ~/templates'"
+  example: "'cpull -t ~/templates'"
 }, {
   name: 'list',
   short: 'l',
   type: 'bool',
   description: 'Show template list',
-  example: "'minit -l'"
+  example: "'cpull -l'"
 }, {
   name: 'editor',
   short: 'f',
   type: 'string',
   description: 'Change using editor',
-  example: "'minit -f vim'"
+  example: "'cpull -f vim'"
 }, {
   name: 'config',
   short: 'c',
   type: 'bool',
-  description: 'Edit minit config file',
-  example: "'minit -c'"
+  description: 'Edit cpull config file',
+  example: "'cpull -c'"
 }])
 
 function check(opt, callback) {
@@ -80,24 +80,24 @@ if(process.argv.length <= 2) {
 arg = argv.run()
 
 if(arg.options.list) {
-  minit.template_list()
+  cpull.template_list()
 }
 
 if(arg.options.config) {
-  minit.edit_config()
+  cpull.edit_config()
 }
 
 check(arg.options.edit, (edit) => {
-  minit.edit_template(edit)
+  cpull.edit_template(edit)
 })
 
 check(arg.options.template, (template) => {
-  minit.template_root = template
+  cpull.template_root = template
 })
 
 check(arg.options.editor, (editor) => {
-  minit.editor = editor
+  cpull.editor = editor
 })
 
 
-minit.copy_file(arg.targets)
+cpull.copy_file(arg.targets)

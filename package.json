@@ -1,14 +1,14 @@
 {
-  "name": "minit",
+  "name": "cpull",
   "version": "1.0.2",
-  "description": "mini init",
+  "description": "copy pull",
   "main": "index.js",
   "scripts": {
     "test": "ava -v"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ctare/minit.git"
+    "url": "git+https://github.com/ctare/cpull.git"
   },
   "keywords": [
     "mini",
@@ -17,14 +17,14 @@
   "author": "ctare <c0115114ca@edu.teu.ac.jp>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ctare/minit/issues"
+    "url": "https://github.com/ctare/cpull/issues"
   },
-  "homepage": "https://github.com/ctare/minit#readme",
+  "homepage": "https://github.com/ctare/cpull#readme",
   "devDependencies": {
     "ava": "^0.25.0"
   },
   "bin": {
-    "minit": "./bin/minit.js"
+    "cpull": "./bin/cpull.js"
   },
   "dependencies": {
     "argv": "0.0.2",
