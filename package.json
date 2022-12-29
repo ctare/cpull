@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/ctare/cpull#readme",
   "devDependencies": {
-    "ava": "^0.25.0"
+    "ava": "^5.1.0"
   },
   "bin": {
     "cpull": "./bin/cpull.js"
