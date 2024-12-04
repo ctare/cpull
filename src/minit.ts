@@ -1,6 +1,7 @@
-const nconf = require('nconf')
-const editor = require('editor')
-import path from "path"
+import nconf from 'nconf'
+import editor from 'editor'
+import path from 'path'
+import fs from 'fs'
 
 export class Store {
   constructor(
@@ -11,6 +12,8 @@ export class Store {
 
   get(): string {
     const value = this.stores[this.key]
+
+    // decorator
     if (this.options.get) {
       return this.options.get(value)
     }
@@ -18,9 +21,17 @@ export class Store {
     return value
   }
 
-  set(value: string) {
+  set(value: string, callback?: () => void) {
     nconf.set(this.key, value)
-    nconf.save()
+    nconf.save((err: any) => {
+      if (err) {
+        console.error(err)
+      } else {
+        if (callback) {
+          callback()
+        }
+      }
+    })
   }
 }
 
@@ -57,8 +68,6 @@ export class Minit {
    * @param dest copy to
    */
   static copyFile(src: string, dest: string) {
-    const fs = require('fs')
-
     if (fs.statSync(src).isDirectory()) {
       fs.mkdirSync(dest, { recursive: true })
       fs.readdirSync(src).forEach((child: string) => {

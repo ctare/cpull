@@ -2,7 +2,7 @@
   "name": "cpull",
   "version": "1.0.2",
   "description": "copy pull",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "test": "ava -v"
   },
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ctare/cpull#readme",
   "devDependencies": {
+    "@types/nconf": "^0.10.7",
     "@types/node": "^22.10.1",
     "@types/yargs": "^17.0.33",
     "ava": "^6.2.0",
@@ -34,6 +35,8 @@
   "dependencies": {
     "argv": "0.0.2",
     "chalk": "^2.3.1",
+    "conf": "^13.0.1",
+    "cosmiconfig": "^9.0.0",
     "editor": "^1.0.0",
     "nan": "^2.9.2",
     "nconf": "^0.12.1",
@@ -46,5 +49,6 @@
     "require": [
       "ts-node/register"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

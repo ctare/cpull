@@ -1,6 +1,7 @@
 import test, { ExecutionContext } from 'ava'
 import { Minit } from '../src/minit'
-import * as fs from 'fs'
+import fs from 'fs'
+import path from 'path'
 
 /**
  * clear tmp/*
@@ -9,7 +10,6 @@ import * as fs from 'fs'
  * mkdir tmp
  */
 function clearTmp() {
-  const path = require('path')
   const dir = path.resolve('tmp')
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true })
@@ -56,6 +56,23 @@ test('file copy', t => {
   assertDir(t, 'tmp/dirA')
   assertDir(t, 'tmp/dirA/recA')
   assertFile(t, 'tmp/dirA/recB/fileRecB')
+
+  t.pass()
+})
+
+test.serial('save config file', async t => {
+  const stores = Minit.loadStores('./tmp')
+
+  // wait callback
+  const promise = new Promise<void>((resolve, reject) => {
+    stores.templateRoot.set('./templates', () => {
+      resolve()
+    })
+  })
+
+  await promise
+  
+  assertFile(t, 'tmp/config.json')
 
   t.pass()
 })
