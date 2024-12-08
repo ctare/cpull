@@ -31,6 +31,16 @@ function assertFileTypes(t: ExecutionContext, filename: string, stat: (stat: fs.
   t.pass()
 }
 
+function assertContainsAll(t: ExecutionContext, actual: string[], expected: string[]): void {
+  // diff = expected - actual
+  // 差分があれば失敗、残ったものを表示する
+  const diff = expected.filter((value) => !actual.includes(value))
+  if (diff.length > 0) {
+    t.fail(`not contains all: ${diff}`)
+  }
+
+  t.pass()
+}
 
 function assertFile(t: ExecutionContext, filename: string): void {
   assertFileTypes(t, filename, (stat: fs.Stats) => stat.isFile())
@@ -48,7 +58,7 @@ test.afterEach(_ => {
   clearTmp()
 })
 
-test('file copy', t => {
+test.serial('file copy', t => {
   Minit.copyFile('templates/sample', 'tmp/')
 
   assertFile(t, 'tmp/main.cpp')
@@ -56,8 +66,14 @@ test('file copy', t => {
   assertDir(t, 'tmp/dirA')
   assertDir(t, 'tmp/dirA/recA')
   assertFile(t, 'tmp/dirA/recB/fileRecB')
+})
 
-  t.pass()
+test.serial('skip file copy', t => {
+  const first = Minit.copyFile('templates/duplicate', 'tmp/')
+  const second = Minit.copyFile('templates/sample', 'tmp/')
+
+  const expected = ['/main.cpp', '/dirB/fileB']
+  assertContainsAll(t, second.skipped, expected)
 })
 
 test.serial('save config file', async t => {
@@ -73,6 +89,35 @@ test.serial('save config file', async t => {
   await promise
   
   assertFile(t, 'tmp/config.json')
+})
 
-  t.pass()
+test.serial('load config file', async t => {
+  const stores = Minit.loadStores('./tmp')
+
+  // wait callback
+  const promise = new Promise<void>((resolve, reject) => {
+    stores.templateRoot.set('./templates', () => {
+      resolve()
+    })
+  })
+
+  await promise
+
+  const stores2 = Minit.loadStores('./tmp')
+  const path = stores2.templateRoot.get()
+  const last = path.split('/').reverse()[0]
+
+  t.is(last, 'templates')
+})
+
+test.serial('get templates', t => {
+  const templates = Minit.getTemplates('templates')
+  const expected = ['sample', 'sample2', 'duplicate']
+
+  assertContainsAll(t, templates, expected)
+})
+
+test.serial('is dir', t => {
+  t.true(Minit.isDir('templates'))
+  t.false(Minit.isDir('templates/sample/input'))
 })

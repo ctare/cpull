@@ -30,7 +30,7 @@
     "typescript": "^5.7.2"
   },
   "bin": {
-    "cpull": "./dist/index.js"
+    "cpull": "./dist/src/index.js"
   },
   "dependencies": {
     "argv": "0.0.2",

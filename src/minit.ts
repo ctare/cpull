@@ -2,6 +2,7 @@ import nconf from 'nconf'
 import editor from 'editor'
 import path from 'path'
 import fs from 'fs'
+import chalk, { Chalk } from 'chalk'
 
 export class Store {
   constructor(
@@ -61,20 +62,66 @@ export class Minit {
     }
   }
 
+  static isDir(path: string): boolean {
+    return fs.existsSync(path) && fs.statSync(path).isDirectory()
+  }
+
+  static getTemplates(rootPath: string) {
+    const files = fs.readdirSync(rootPath)
+
+    // ignore .files
+    return files.filter(file => !file.startsWith('.'))
+  }
+
   /**
    * copy file or directory
    * 
    * @param src copy from
    * @param dest copy to
+   * @returns skipped files
    */
-  static copyFile(src: string, dest: string) {
+  static copyFile(src: string, dest: string): {
+    skipped: string[],
+    copied: string[],
+  } {
+    return this.copyFileWithRoot(src, dest, src)
+  }
+
+  private static copyFileWithRoot(src: string, dest: string, root: string): {
+    skipped: string[],
+    copied: string[],
+  } {
     if (fs.statSync(src).isDirectory()) {
       fs.mkdirSync(dest, { recursive: true })
+
+      const skipped: string[] = []
+      const copied: string[] = []
       fs.readdirSync(src).forEach((child: string) => {
-        this.copyFile(`${src}/${child}`, `${dest}/${child}`)
+
+        // recursive
+        const ret = this.copyFileWithRoot(`${src}/${child}`, `${dest}/${child}`, root)
+        skipped.push(...ret.skipped)
+        copied.push(...ret.copied)
       })
+ 
+      return { skipped, copied }
     } else {
+      if (fs.existsSync(dest)) {
+        return { skipped: [Minit.trimRoot(src, root)], copied: [] }
+      }
+
       fs.copyFileSync(src, dest)
+      return { skipped: [], copied: [Minit.trimRoot(src, root)] }
     }
+  }
+
+  private static trimRoot(src: string, root: string): string {
+    return src.replace(root, '') // first match only
+  }
+
+  static showFiles(files: string[], color: Chalk) {
+    files.forEach(file => {
+      console.log(color(file))
+    })
   }
 }
